@@ -13,7 +13,7 @@ describe("gameGenerator", () => {
     const bound = 4;
     const game = gameGenerator(bound);
     const number = [];
-    for (let i = 0; i < bound; i++) {
+    for (let i = 0; i <= bound; i++) {
       if (game.guess(i)) {
         number.push(i);
       }
@@ -22,12 +22,25 @@ describe("gameGenerator", () => {
   });
 
   it("should have a reset method", () => {
-    // How do you test for this?
-    expect(false).toBeTruthy();
+    let num = 5;
+    let test = gameGenerator(5);
+    test.guess(6);
+    test.guess(7);
+    test.reset();
+    expect(test.numberGuesses()).toEqual(0)
+    
   });
 
-  it("create your own test", () => {
-    expect(false).toBeTruthy();
+  it("return the correct number of guesses", () => {
+    const num = 5;
+    const test = gameGenerator(num);
+    let g = null;
+    for (let i = 0; i <= num; i++) {
+      if (test.guess(i)) {
+        g = (i + 1);
+      }        
+    }
+    expect(test.numberGuesses()).toEqual(g);
   });
 });
 
