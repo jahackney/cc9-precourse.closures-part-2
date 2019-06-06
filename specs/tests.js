@@ -32,15 +32,10 @@ describe("gameGenerator", () => {
   });
 
   it("return the correct number of guesses", () => {
-    const num = 5;
-    const test = gameGenerator(num);
-    let g = null;
-    for (let i = 0; i <= num; i++) {
-      if (test.guess(i)) {
-        g = (i + 1);
-      }        
-    }
-    expect(test.numberGuesses()).toEqual(g);
+    const n = 4;
+    let test = gameGenerator(5);
+    for (let i = 0; i < n; ++i) test.guess(1);
+    expect(test.numberGuesses()).toEqual(n);
   });
 });
 
@@ -49,8 +44,41 @@ describe("accountGenerator", () => {
     expect(accountGenerator).toBeDefined();
     expect(typeof accountGenerator).toBe("function");
   });
-
-  it("should have some tests", () => {
-    expect(false).toBeTruthy();
+  //Add function getBalance that returns the current balance
+  it("should return the current balance", () => {
+    let test = accountGenerator();
+    test.deposit(42);
+    test.withdraw(5);
+    expect(test.getBalance()).toBe(37);
   });
+  //Change withdraw to return a transaction object
+   //Change deposit to return a transaction object
+  it("should generate an object", () => {
+    const test = accountGenerator(6);
+    expect(typeof test.withdraw(4)).toBe("object");
+    expect(typeof test.deposit(2)).toBe("object");
+  });
+ //Implement a function transactionHistory to get the last n withdrawals or deposits
+ it("should get the last n withdrawals or deposits", () => {
+    let num = 3;
+    let test = accountGenerator();
+    test.deposit(42);
+    test.withdraw(5);
+    test.withdraw(1);
+    test.deposit(71);
+    let hist = test.transactionHistory(num);
+    expect(hist.length).toBe(num);
+});
+  //Implement a function averageTransaction that determines the average withdrawal and deposit amounts
+  it("should determine the average withdrawal and deposit amounts", () => {
+    let num = 3;
+    let test = accountGenerator();
+    test.deposit(42);
+    test.withdraw(5);
+    test.withdraw(1);
+    test.deposit(71);
+    let avg = test.averageTransaction();
+    expect(avg.deposit).toBe(56.5);
+    expect(avg.withdrawal).toBe(3);
+    });
 });

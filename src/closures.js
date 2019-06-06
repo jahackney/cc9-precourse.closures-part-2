@@ -45,19 +45,65 @@ function gameGenerator(upper) { //take a number input that provides the 'upper b
 
 
 function accountGenerator(initial) {
-  let balance = initial;
+  function TransactionMessage(type, amount, before, after, status) {
+    this.type = type;
+    this.amount = amount;
+    this.before = before;
+    this.after = after;
+    this.status = status;
+    this.time = new Date(); //Use the Date object to incorporate a key time into the transactions
+  };
 
+  let balance = initial;
+  let history = [];
+  let wApproved = [];
+  let dApproved =[];
+
+  if (initial === undefined) {
+    balance = 0;
+  }
   return {
-    withdraw: function(amount) {
+    withdraw: function(amount) { //Change withdraw to return a transaction object
       if (balance - amount >= 0) {
         balance = balance - amount;
-        return `Here’s your money: $${amount}`;
-      }
-      return "Insufficient funds.";
+        let approvedWithdraw = new TransactionMessage('withdrawal', amount, balance + amount, balance, 'approved');
+        history.unshift(approvedWithdraw);
+        wApproved.push(amount);
+        return approvedWithdraw;
+      } 
+      let deniedWithdraw = new TransactionMessage('withdrawal', amount, balance, balance - amount , 'denied');
+      history.unshift(deniedWithdraw);
+      return deniedWithdraw;
     },
-    deposit: function(amount) {
+    deposit: function(amount) { //Change deposit to return a transaction object
       balance = balance + amount;
-      return `Your balance is: $${balance}`;
+      let approvedDeposit = new TransactionMessage('deposit', amount, balance - amount, balance, 'approved');
+      history.unshift(approvedDeposit);
+      dApproved.push(amount);
+      return approvedDeposit;
+    },
+    getBalance: function() { //Add function getBalance that returns the current balance
+      return balance;
+    },
+    transactionHistory: function(n) { //Implement a function transactionHistory to get the last n withdrawals or deposits
+      return history.slice(0, n);
+    },
+    averageTransaction: function() { //Implement a function averageTransaction that determines the average withdrawal and deposit amounts.
+      return {
+        withdrawal: wApproved.reduce((a, b) => a + b) / wApproved.length,
+        deposit: dApproved.reduce((a, b) => a + b) / dApproved.length
+      }
     }
+
   };
-}
+} 
+
+
+
+
+
+
+
+ 
+
+
