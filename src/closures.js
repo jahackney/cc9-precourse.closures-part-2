@@ -72,7 +72,7 @@ function accountGenerator(initial) {
         wApproved.push(amount);
         return approvedWithdraw;
       } else {
-        let deniedWithdraw = new TransactionMessage('withdrawal', amount, balance, balance - amount , 'denied');
+        let deniedWithdraw = new TransactionMessage('withdrawal', amount, balance, balance, 'denied');
         history.push(deniedWithdraw);
         return deniedWithdraw;
       }
@@ -86,7 +86,7 @@ function accountGenerator(initial) {
         dApproved.push(amount);
         return approvedDeposit;
       }
-      let deniedDeposit = new TransactionMessage('deposit', amount, balance, balance + amount, 'denied');
+      let deniedDeposit = new TransactionMessage('deposit', amount, balance, balance, 'denied');
       history.push(deniedDeposit);
       return deniedDeposit;
     },
