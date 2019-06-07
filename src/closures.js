@@ -64,7 +64,7 @@ function accountGenerator(initial) {
   }
   return {
     withdraw: function(amount) { //Change withdraw to return a transaction object
-      if (balance - amount >= 0) {
+      if (balance - amount >= 0 && amount > 0) {
         balance = balance - amount;
         let approvedWithdraw = new TransactionMessage('withdrawal', amount, balance + amount, balance, 'approved');
         history.unshift(approvedWithdraw);
@@ -76,11 +76,16 @@ function accountGenerator(initial) {
       return deniedWithdraw;
     },
     deposit: function(amount) { //Change deposit to return a transaction object
-      balance = balance + amount;
-      let approvedDeposit = new TransactionMessage('deposit', amount, balance - amount, balance, 'approved');
-      history.unshift(approvedDeposit);
-      dApproved.push(amount);
-      return approvedDeposit;
+      if (balance + amount > balance) {
+        balance = balance + amount;
+        let approvedDeposit = new TransactionMessage('deposit', amount, balance - amount, balance, 'approved');
+        history.unshift(approvedDeposit);
+        dApproved.push(amount);
+        return approvedDeposit;
+      }
+      let deniedDeposit = new TransactionMessage('deposit', amount, balance, balance + amount, 'denied');
+      history.unshift(deniedDeposit);
+      return deniedDeposit;
     },
     getBalance: function() { //Add function getBalance that returns the current balance
       return balance;
