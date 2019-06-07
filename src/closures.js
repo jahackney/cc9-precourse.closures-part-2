@@ -62,19 +62,22 @@ function accountGenerator(initial) {
   if (initial === undefined || initial < 0) {
     balance = 0;
   }
+
   return {
     withdraw: function(amount) { //Change withdraw to return a transaction object
-      if (balance - amount >= 0 && amount > 0) {
+      if (balance - amount >= 0 && amount > 0 && amount <= balance) {
         balance = balance - amount;
         let approvedWithdraw = new TransactionMessage('withdrawal', amount, balance + amount, balance, 'approved');
         history.push(approvedWithdraw);
         wApproved.push(amount);
         return approvedWithdraw;
-      } 
-      let deniedWithdraw = new TransactionMessage('withdrawal', amount, balance, balance - amount , 'denied');
-      history.push(deniedWithdraw);
-      return deniedWithdraw;
+      } else {
+        let deniedWithdraw = new TransactionMessage('withdrawal', amount, balance, balance - amount , 'denied');
+        history.push(deniedWithdraw);
+        return deniedWithdraw;
+      }
     },
+
     deposit: function(amount) { //Change deposit to return a transaction object
       if (balance + amount > balance) {
         balance = balance + amount;
@@ -87,12 +90,15 @@ function accountGenerator(initial) {
       history.push(deniedDeposit);
       return deniedDeposit;
     },
+
     getBalance: function() { //Add function getBalance that returns the current balance
       return balance;
     },
+
     transactionHistory: function(n) { //Implement a function transactionHistory to get the last n withdrawals or deposits
       return history.slice(history.length - n);
     },
+
     averageTransaction: function() { //Implement a function averageTransaction that determines the average withdrawal and deposit amounts.
       return {
         withdrawal: wApproved.reduce((a, b) => a + b) / wApproved.length,
