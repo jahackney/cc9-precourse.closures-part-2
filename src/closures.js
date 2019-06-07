@@ -59,7 +59,7 @@ function accountGenerator(initial) {
   let wApproved = [];
   let dApproved =[];
 
-  if (initial === undefined) {
+  if (initial === undefined || initial < 0) {
     balance = 0;
   }
   return {
@@ -91,7 +91,7 @@ function accountGenerator(initial) {
       return balance;
     },
     transactionHistory: function(n) { //Implement a function transactionHistory to get the last n withdrawals or deposits
-      return history.slice(0, n);
+      return history.slice(history.length - n);
     },
     averageTransaction: function() { //Implement a function averageTransaction that determines the average withdrawal and deposit amounts.
       return {
